@@ -38,8 +38,8 @@ object GenScalaCheckGen {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatest
-package check
+package org.scalatestplus
+package scalacheck
                           """
 
   val propertyCheckPreamble = """
@@ -449,7 +449,7 @@ import org.scalactic._
  * 
  * @author Bill Venners
  */
-trait ScalaCheckDrivenPropertyChecks extends Whenever with org.scalatest.check.ScalaCheckConfiguration {
+trait ScalaCheckDrivenPropertyChecks extends Whenever with org.scalatestplus.scalacheck.ScalaCheckConfiguration {
 
   /**
    * Performs a property check by applying the specified property check function to arguments
