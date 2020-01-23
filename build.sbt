@@ -5,8 +5,8 @@ import scala.xml.transform.{RewriteRule, RuleTransformer}
 
 val sharedSettings = Seq(
   name := "scalacheck-1.14",
-  organization := "org.scalatestplus",
-  version := "3.1.0.0",
+  organization := "dev.travisbrown",
+  version := "3.1.0.1-20200123-9982f0d-NIGHTLY",
   homepage := Some(url("https://github.com/scalatest/scalatestplus-scalacheck")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
@@ -25,8 +25,10 @@ val sharedSettings = Seq(
   ),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   libraryDependencies ++= Seq(
-    "org.scalatest" %%% "scalatest" % "3.1.0"
+    "dev.travisbrown" % "scalatest_0.22" % "3.1.0-20200123-9982f0d-NIGHTLY"
   ),
+  scalacOptions += "-language:implicitConversions",
+  //).map(_.withDottyCompat(scalaVersion.value)),
   // skip dependency elements with a scope
   pomPostProcess := { (node: XmlNode) =>
     new RuleTransformer(new RewriteRule {
@@ -57,7 +59,7 @@ val sharedSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
   credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-  pgpSecretRing := file((Path.userHome / ".gnupg" / "secring.gpg").getAbsolutePath),
+  pgpSecretRing := file((Path.userHome / ".sbt" / "gpg" / "secring.asc").getAbsolutePath),
   pgpPassphrase := None
 )
 
@@ -69,8 +71,8 @@ lazy val scalatestPlusScalaCheck =
     .enablePlugins(SbtOsgi)
     .settings(osgiSettings: _*).settings(
       libraryDependencies ++= Seq(
-        "org.scalacheck" %%% "scalacheck" % "1.14.2"
-      ), 
+        "org.scalacheck" %%% "scalacheck" % "1.14.3"
+      ).map(_.withDottyCompat(scalaVersion.value)),
       OsgiKeys.exportPackage := Seq(
         "org.scalatestplus.scalacheck.*"
       ),
@@ -97,7 +99,7 @@ lazy val scalatestPlusScalaCheck =
       }
     )
     .jvmSettings(
-      crossScalaVersions := List("2.10.7", "2.11.12", "2.12.10", "2.13.1"),
+      crossScalaVersions := List("2.10.7", "2.11.12", "2.12.10", "2.13.1", "0.22.0-bin-20200123-9982f0d-NIGHTLY"),
       sourceGenerators in Compile += {
         Def.task {
           GenResourcesJVM.genResources((sourceManaged in Compile).value / "org" / "scalatestplus" / "scalacheck", version.value, scalaVersion.value) ++
